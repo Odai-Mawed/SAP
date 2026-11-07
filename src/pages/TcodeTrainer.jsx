@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { AREAS, TCODES } from "../data/tcodes.js";
 import { useProgress } from "../progress.jsx";
 import { shuffle } from "../utils.js";
+import PathNext from "../components/PathNext.jsx";
 
 const MODES = [
   { id: "befehl", label: "⌨️ Befehlsfeld" },
@@ -9,9 +10,9 @@ const MODES = [
   { id: "liste", label: "🔍 Nachschlagen" }
 ];
 
-export default function TcodeTrainer() {
+export default function TcodeTrainer({ initialArea }) {
   const [mode, setMode] = useState("befehl");
-  const [area, setArea] = useState("Alle");
+  const [area, setArea] = useState(AREAS.includes(initialArea) ? initialArea : "Alle");
   const pool = useMemo(() => (area === "Alle" ? TCODES : TCODES.filter((t) => t.area === area)), [area]);
 
   return (
@@ -41,6 +42,7 @@ export default function TcodeTrainer() {
       {mode === "befehl" && <CommandField key={area} pool={pool} />}
       {mode === "karten" && <Flashcards key={area} pool={pool} />}
       {mode === "liste" && <Lookup pool={pool} />}
+      <PathNext compact />
     </>
   );
 }
@@ -90,7 +92,7 @@ function CommandField({ pool }) {
     if (code === task.code) {
       const s = streak + 1;
       setStreak(s);
-      recordTcode(true, s);
+      recordTcode(true, s, task.area);
       setScreen(task);
       setStatus({ type: "ok", text: `Transaktion ${task.code} gestartet. ${s > 1 ? `🔥 ${s} in Folge!` : ""} (Enter = nächste Aufgabe)` });
     } else {

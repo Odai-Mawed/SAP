@@ -7,8 +7,11 @@ const STORAGE_KEY = "sap-lernapp-progress-v1";
 const EMPTY = {
   xp: 0,
   lessons: {}, // key → { best: Prozent, done: true }
-  tcode: { right: 0, total: 0, bestStreak: 0 },
+  tcode: { right: 0, total: 0, bestStreak: 0, byArea: {} }, // byArea: Bereich → richtige Antworten
   processes: {}, // id → true
+  tasks: {}, // id → { done: true, attempts, firstTry }
+  activePath: null,
+  pathTests: {}, // Pfad-id → bestes Ergebnis in Prozent
   exam: { best: null, passedAt: null },
   theme: null
 };
@@ -18,7 +21,7 @@ function load() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return EMPTY;
     const data = JSON.parse(raw);
-    return { ...EMPTY, ...data, tcode: { ...EMPTY.tcode, ...data.tcode }, exam: { ...EMPTY.exam, ...data.exam } };
+    return { ...EMPTY, ...data, tcode: { ...EMPTY.tcode, ...data.tcode, byArea: { ...data.tcode?.byArea } }, exam: { ...EMPTY.exam, ...data.exam } };
   } catch {
     return EMPTY;
   }
@@ -55,16 +58,40 @@ export function ProgressProvider({ children }) {
     });
   }, []);
 
-  const recordTcode = useCallback((correct, streak) => {
+  const recordTcode = useCallback((correct, streak, area) => {
     setState((s) => ({
       ...s,
       xp: s.xp + (correct ? 5 : 0),
       tcode: {
         right: s.tcode.right + (correct ? 1 : 0),
         total: s.tcode.total + 1,
-        bestStreak: Math.max(s.tcode.bestStreak, streak)
+        bestStreak: Math.max(s.tcode.bestStreak, streak),
+        byArea: correct && area ? { ...s.tcode.byArea, [area]: (s.tcode.byArea[area] ?? 0) + 1 } : s.tcode.byArea
       }
     }));
+  }, []);
+
+  const completeTask = useCallback((id, attempts, xp) => {
+    setState((s) => {
+      const prev = s.tasks[id];
+      const firstTry = attempts === 1;
+      const gain = !prev ? (firstTry ? xp : Math.round(xp / 2)) : 0;
+      return {
+        ...s,
+        xp: s.xp + gain,
+        tasks: { ...s.tasks, [id]: { done: true, attempts: prev?.attempts ?? attempts, firstTry: prev?.firstTry || firstTry } }
+      };
+    });
+  }, []);
+
+  const setActivePath = useCallback((id) => setState((s) => ({ ...s, activePath: id })), []);
+
+  const recordPathTest = useCallback((id, pct) => {
+    setState((s) => {
+      const prev = s.pathTests[id] ?? 0;
+      const firstPass = pct >= 70 && prev < 70;
+      return { ...s, xp: s.xp + (firstPass ? 150 : 0), pathTests: { ...s.pathTests, [id]: Math.max(prev, pct) } };
+    });
   }, []);
 
   const completeProcess = useCallback((id, perfect) => {
@@ -120,7 +147,10 @@ export function ProgressProvider({ children }) {
     };
   }, [state]);
 
-  const value = { state, stats, completeLesson, recordTcode, completeProcess, recordExam, toggleTheme, reset };
+  const value = {
+    state, stats, completeLesson, recordTcode, completeTask, setActivePath, recordPathTest,
+    completeProcess, recordExam, toggleTheme, reset
+  };
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;
 }
 

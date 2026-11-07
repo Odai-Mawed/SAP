@@ -4,6 +4,14 @@ Eine interaktive React-App, mit der du SAP von Grund auf lernst – auf Deutsch.
 
 ## Inhalte
 
+- **7 rollenbasierte Lernpfade**: SAP-Einsteiger, Finanzen & Controlling, Einkauf & Produktion, Vertrieb,
+  ABAP-Entwicklung, Basis & Administration, Umstieg auf S/4HANA. Jeder Pfad kombiniert Lektionen, Praxisaufgaben,
+  T-Code-Drills und Prozess-Puzzles und endet mit einem Abschlusstest. Der aktive Pfad zeigt überall den nächsten Schritt.
+- **29 Praxisaufgaben** in sechs Formaten:
+  - *Buchungssatz*: Konten der Soll- oder Haben-Seite zuordnen, Lösung als T-Konto
+  - *SAP-Maske*: ME21N, VA01, MIGO, FB50, KS01 und MM01 anhand eines Szenarios ausfüllen
+  - *Support-Fall*: Tickets lösen, indem du die richtige Transaktion, Bewegungsart oder Tabelle nennst
+  - *Zuordnen*, *Reihenfolge* und *Lückentext* (auch ABAP- und CDS-Code)
 - **11 Lernmodule, 28 Lektionen** mit Quiz zu jeder Lektion
   - SAP-Grundlagen · Navigation (SAP GUI & Fiori) · Organisationsstrukturen
   - Finanzwesen (FI) · Controlling (CO) · Materialwirtschaft (MM) · Vertrieb (SD) · Produktion (PP)
@@ -33,15 +41,17 @@ Der Build verwendet relative Pfade (`base: "./"`) und Hash-Routing, kann also au
 
 ```
 src/
-  data/          Lerninhalte (Module & Quizfragen, T-Codes, Glossar, Prozesse)
-  components/    Wiederverwendbare Komponenten (Quiz)
+  data/          Lerninhalte (Module & Quizfragen, Aufgaben, Lernpfade, T-Codes, Glossar, Prozesse)
+  components/    Quiz, Aufgaben-Ansichten, Hinweis auf den nächsten Lernpfad-Schritt
+  pathLogic.js   Fortschritt und nächster Schritt in Lernpfaden
   pages/         Seiten: Start, Modul, Lektion, T-Code-Trainer, Prozesse, Glossar, Prüfung
   progress.jsx   Lernfortschritt (React Context + localStorage)
   router.js      Minimaler Hash-Router
 ```
 
 Neue Lektionen fügst du einfach in `src/data/modules.js` hinzu – Inhalt als HTML, Quizfragen mit
-`options` und dem Index der richtigen Antwort in `answer`.
+`options` und dem Index der richtigen Antwort in `answer`. Aufgaben stehen in `src/data/tasks.js`,
+Lernpfade in `src/data/paths.js`.
 
 > Inoffizielles Lernprojekt. SAP, S/4HANA, Fiori und ABAP sind Marken der SAP SE.
 

@@ -7,10 +7,17 @@ import TcodeTrainer from "./pages/TcodeTrainer.jsx";
 import Processes from "./pages/Processes.jsx";
 import Glossary from "./pages/Glossary.jsx";
 import Exam from "./pages/Exam.jsx";
+import Tasks from "./pages/Tasks.jsx";
+import TaskPage from "./pages/TaskPage.jsx";
+import Paths from "./pages/Paths.jsx";
+import PathPage from "./pages/PathPage.jsx";
+import PathTest from "./pages/PathTest.jsx";
 
 const NAV = [
   { path: "", label: "Start", icon: "🏠" },
-  { path: "tcodes", label: "T-Code-Trainer", icon: "⌨️" },
+  { path: "lernpfade", label: "Lernpfade", icon: "🧭" },
+  { path: "aufgaben", label: "Aufgaben", icon: "📝" },
+  { path: "tcodes", label: "T-Codes", icon: "⌨️" },
   { path: "prozesse", label: "Prozesse", icon: "🔗" },
   { path: "glossar", label: "Glossar", icon: "📖" },
   { path: "pruefung", label: "Prüfung", icon: "🎓" }
@@ -30,10 +37,25 @@ export default function App() {
       content = <LessonPage moduleId={a} lessonId={b} />;
       break;
     case "tcodes":
-      content = <TcodeTrainer />;
+      content = <TcodeTrainer key={a ?? "alle"} initialArea={a} />;
       break;
     case "prozesse":
-      content = <Processes />;
+      content = <Processes key={a ?? "alle"} initialId={a} />;
+      break;
+    case "lernpfade":
+      content = <Paths />;
+      break;
+    case "pfad":
+      content = <PathPage pathId={a} />;
+      break;
+    case "pfadtest":
+      content = <PathTest key={a} pathId={a} />;
+      break;
+    case "aufgaben":
+      content = <Tasks />;
+      break;
+    case "aufgabe":
+      content = <TaskPage key={a} taskId={a} />;
       break;
     case "glossar":
       content = <Glossary />;
@@ -45,7 +67,8 @@ export default function App() {
       content = <Home />;
   }
 
-  const activeNav = page === "modul" || page === "lektion" ? "" : page ?? "";
+  const NAV_ALIAS = { modul: "", lektion: "", pfad: "lernpfade", pfadtest: "lernpfade", aufgabe: "aufgaben" };
+  const activeNav = page in NAV_ALIAS ? NAV_ALIAS[page] : page ?? "";
 
   return (
     <div className="app">

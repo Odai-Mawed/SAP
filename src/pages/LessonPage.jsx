@@ -3,6 +3,7 @@ import { MODULES } from "../data/modules.js";
 import { useProgress } from "../progress.jsx";
 import { lessonKey } from "../utils.js";
 import Quiz from "../components/Quiz.jsx";
+import PathNext from "../components/PathNext.jsx";
 import NotFound from "./NotFound.jsx";
 
 export default function LessonPage({ moduleId, lessonId }) {
@@ -69,6 +70,7 @@ function Lesson({ m, l }) {
         )}
         {!next && !nextModule && <a className="btn" href="#pruefung">Zur Abschlussprüfung →</a>}
       </nav>
+      <PathNext compact />
     </article>
   );
 }

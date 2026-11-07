@@ -2,6 +2,10 @@ import { useState } from "react";
 import { MODULES } from "../data/modules.js";
 import { useProgress } from "../progress.jsx";
 import { lessonKey } from "../utils.js";
+import { PATHS, PATH_BY_ID } from "../data/paths.js";
+import { TASKS } from "../data/tasks.js";
+import { pathProgress, stepInfo } from "../pathLogic.js";
+import PathNext from "../components/PathNext.jsx";
 
 export default function Home() {
   const { state, stats, reset } = useProgress();
@@ -17,7 +21,10 @@ export default function Home() {
     }
   }
 
-  const tcodeRate = state.tcode.total ? Math.round((state.tcode.right / state.tcode.total) * 100) : 0;
+  const tasksDone = TASKS.filter((t) => state.tasks[t.id]?.done).length;
+  const activePath = PATH_BY_ID[state.activePath];
+  const activeProg = activePath ? pathProgress(activePath, state) : null;
+  const activeNext = activeProg && !activeProg.complete ? stepInfo(activePath.steps[activeProg.nextIndex], activePath) : null;
   const pct = Math.round((stats.doneLessons / stats.totalLessons) * 100);
 
   return (
@@ -28,10 +35,16 @@ export default function Home() {
           <h1>Lerne SAP – Schritt für Schritt.</h1>
           <p>
             Von den Grundlagen über FI, CO, MM, SD und PP bis zu S/4HANA und ABAP. Mit Lektionen, Quizzen,
-            einem Transaktions-Trainer im SAP-GUI-Stil und Prozess-Übungen.
+            Praxisaufgaben, einem Transaktions-Trainer im SAP-GUI-Stil und rollenbasierten Lernpfaden.
           </p>
           <div className="hero-actions">
-            {nextLesson ? (
+            {activeNext ? (
+              <a className="btn btn-lg" href={activeNext.href}>
+                Weiter im Pfad: {activeNext.title} →
+              </a>
+            ) : !activePath ? (
+              <a className="btn btn-lg" href="#lernpfade">Lernpfad wählen →</a>
+            ) : nextLesson ? (
               <a className="btn btn-lg" href={`#lektion--${nextLesson.m.id}--${nextLesson.l.id}`}>
                 {stats.doneLessons === 0 ? "Jetzt starten" : "Weiterlernen"}: {nextLesson.l.title} →
               </a>
@@ -49,7 +62,7 @@ export default function Home() {
         <div className="stats">
           <Stat value={`${stats.doneLessons}/${stats.totalLessons}`} label="Lektionen" sub={`${pct}% abgeschlossen`} />
           <Stat value={state.xp} label="XP gesammelt" sub={stats.level} />
-          <Stat value={`${tcodeRate}%`} label="T-Code-Trefferquote" sub={`${state.tcode.total} Versuche`} />
+          <Stat value={`${tasksDone}/${TASKS.length}`} label="Praxisaufgaben" sub="gelöst" />
           <Stat
             value={state.exam.best != null ? `${state.exam.best}%` : "–"}
             label="Prüfung"
@@ -58,7 +71,27 @@ export default function Home() {
         </div>
       </section>
 
+      {activePath ? (
+        <PathNext />
+      ) : (
+        <>
+          <h2 className="section-title">Wähle deinen Lernpfad</h2>
+          <section className="path-pick">
+            {PATHS.map((p) => (
+              <a key={p.id} href={`#pfad--${p.id}`} className="path-mini" style={{ "--accent": p.color }}>
+                <span>{p.icon}</span>
+                <div><strong>{p.title}</strong><small>{p.role}</small></div>
+              </a>
+            ))}
+          </section>
+        </>
+      )}
+
       <section className="quick">
+        <a className="quick-card" href="#aufgaben">
+          <span>📝</span>
+          <div><strong>Praxisaufgaben</strong><small>Buchungen, SAP-Masken, Support-Fälle</small></div>
+        </a>
         <a className="quick-card" href="#tcodes">
           <span>⌨️</span>
           <div><strong>T-Code-Trainer</strong><small>Transaktionen im Befehlsfeld üben</small></div>
@@ -66,10 +99,6 @@ export default function Home() {
         <a className="quick-card" href="#prozesse">
           <span>🔗</span>
           <div><strong>Prozess-Puzzle</strong><small>P2P, O2C & Co. in die richtige Reihenfolge</small></div>
-        </a>
-        <a className="quick-card" href="#glossar">
-          <span>📖</span>
-          <div><strong>Glossar</strong><small>SAP-Begriffe nachschlagen</small></div>
         </a>
       </section>
 

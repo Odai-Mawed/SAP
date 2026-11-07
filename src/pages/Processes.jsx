@@ -2,10 +2,11 @@ import { useState } from "react";
 import { PROCESSES } from "../data/processes.js";
 import { useProgress } from "../progress.jsx";
 import { shuffle } from "../utils.js";
+import PathNext from "../components/PathNext.jsx";
 
-export default function Processes() {
+export default function Processes({ initialId }) {
   const { state } = useProgress();
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState(PROCESSES.some((p) => p.id === initialId) ? initialId : null);
   const proc = PROCESSES.find((p) => p.id === selected);
 
   return (
@@ -26,6 +27,7 @@ export default function Processes() {
         ))}
       </div>
       {proc ? <Puzzle key={proc.id} proc={proc} /> : <div className="card center muted">Wähle oben einen Prozess aus.</div>}
+      <PathNext compact />
     </>
   );
 }
