@@ -24,7 +24,7 @@ export default function Exam() {
   if (run) {
     return (
       <>
-        <a className="back" href="#/pruefung" onClick={(e) => { e.preventDefault(); setRun(null); }}>← Prüfung verlassen</a>
+        <a className="back" href="#pruefung" onClick={(e) => { e.preventDefault(); setRun(null); }}>← Prüfung verlassen</a>
         <Quiz
           key={run.id}
           title="Abschlussprüfung"

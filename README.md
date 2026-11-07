@@ -44,3 +44,10 @@ Neue Lektionen fügst du einfach in `src/data/modules.js` hinzu – Inhalt als H
 `options` und dem Index der richtigen Antwort in `answer`.
 
 > Inoffizielles Lernprojekt. SAP, S/4HANA, Fiori und ABAP sind Marken der SAP SE.
+
+## Deployment
+
+- **GitHub Pages:** Der Workflow `.github/workflows/deploy.yml` baut und veröffentlicht die App bei jedem Push auf `main`.
+  Einmalig nötig: im Repo unter *Settings → Pages → Build and deployment → Source* „GitHub Actions“ wählen.
+  Danach ist die App unter `https://<benutzer>.github.io/<repo>/` erreichbar.
+- **Einzelne HTML-Datei:** `npm run build:single` erzeugt `dist-single/sap-lernpfad.html`, die ohne Server läuft.

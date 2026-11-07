@@ -28,7 +28,7 @@ function Lesson({ m, l }) {
 
   return (
     <article className="lesson" style={{ "--accent": m.color }}>
-      <a className="back" href={`#/modul/${m.id}`}>← {m.icon} {m.title}</a>
+      <a className="back" href={`#modul--${m.id}`}>← {m.icon} {m.title}</a>
       <header className="lesson-head">
         <small>Lektion {idx + 1} von {m.lessons.length} · ⏱ {l.minutes} Min</small>
         <h1>{l.title}</h1>
@@ -62,12 +62,12 @@ function Lesson({ m, l }) {
       )}
 
       <nav className={`lesson-nav ${finished ? "highlight" : ""}`}>
-        {prev ? <a className="btn ghost" href={`#/lektion/${m.id}/${prev.id}`}>← {prev.title}</a> : <span />}
-        {next && <a className="btn" href={`#/lektion/${m.id}/${next.id}`}>{next.title} →</a>}
+        {prev ? <a className="btn ghost" href={`#lektion--${m.id}--${prev.id}`}>← {prev.title}</a> : <span />}
+        {next && <a className="btn" href={`#lektion--${m.id}--${next.id}`}>{next.title} →</a>}
         {!next && nextModule && (
-          <a className="btn" href={`#/modul/${nextModule.id}`}>Nächstes Modul: {nextModule.title} →</a>
+          <a className="btn" href={`#modul--${nextModule.id}`}>Nächstes Modul: {nextModule.title} →</a>
         )}
-        {!next && !nextModule && <a className="btn" href="#/pruefung">Zur Abschlussprüfung →</a>}
+        {!next && !nextModule && <a className="btn" href="#pruefung">Zur Abschlussprüfung →</a>}
       </nav>
     </article>
   );

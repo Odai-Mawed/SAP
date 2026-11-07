@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 
-/** Minimaler Hash-Router: "#/modul/fi" → ["modul", "fi"] */
+/**
+ * Minimaler Hash-Router. Routen sind einfache Namen aus Buchstaben, Ziffern und
+ * Bindestrichen, Parameter werden mit "--" getrennt:
+ * "#lektion--fi--hauptbuch" → ["lektion", "fi", "hauptbuch"]
+ */
 function parse() {
-  return window.location.hash.replace(/^#\/?/, "").split("/").filter(Boolean).map(decodeURIComponent);
+  const h = window.location.hash.replace(/^#\/?/, "");
+  if (!h || h === "start") return [];
+  return h.split(/--|\//).filter(Boolean).map(decodeURIComponent);
 }
 
 export function useRoute() {
@@ -16,8 +22,4 @@ export function useRoute() {
     return () => window.removeEventListener("hashchange", onChange);
   }, []);
   return parts;
-}
-
-export function navigate(path) {
-  window.location.hash = path;
 }

@@ -10,7 +10,7 @@ export default function ModulePage({ moduleId }) {
 
   return (
     <>
-      <a className="back" href="#/">← Alle Module</a>
+      <a className="back" href="#start">← Alle Module</a>
       <div className="module-head" style={{ "--accent": m.color }}>
         <span className="mh-icon">{m.icon}</span>
         <div>
@@ -24,7 +24,7 @@ export default function ModulePage({ moduleId }) {
           const p = state.lessons[lessonKey(m.id, l.id)];
           return (
             <li key={l.id}>
-              <a href={`#/lektion/${m.id}/${l.id}`} className={p?.done ? "done" : ""}>
+              <a href={`#lektion--${m.id}--${l.id}`} className={p?.done ? "done" : ""}>
                 <span className="ll-no">{p?.done ? "✓" : i + 1}</span>
                 <span className="ll-title">
                   {l.title}

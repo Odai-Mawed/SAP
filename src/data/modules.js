@@ -169,7 +169,7 @@ export const MODULES = [
 <tr><td><code>/nex</code></td><td>Sofort abmelden <strong>ohne</strong> Rückfrage (Achtung: Ungesichertes geht verloren!)</td></tr>
 </table>
 <div class="tip">Ohne <code>/n</code> funktioniert die Eingabe eines T-Codes nur auf dem Easy-Access-Startbild. Gewöhne dir daher <code>/n</code> an!</div>
-<p>Übe das jetzt im <a href="#/tcodes">Transaktions-Trainer</a>!</p>`,
+<p>Übe das jetzt im <a href="#tcodes">Transaktions-Trainer</a>!</p>`,
         quiz: [
           { q: "Was bewirkt die Eingabe /oMM03?", options: ["Öffnet MM03 im selben Fenster", "Öffnet MM03 in einem neuen Modus", "Löscht ein Material", "Meldet den Benutzer ab"], answer: 1, explain: "/o öffnet die Transaktion in einem neuen Fenster (Modus)." },
           { q: "Welche Ziffernendung steht klassisch für „Anzeigen“?", options: ["01", "02", "03", "04"], answer: 2, explain: "01 = Anlegen, 02 = Ändern, 03 = Anzeigen." },

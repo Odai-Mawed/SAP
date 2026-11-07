@@ -50,13 +50,13 @@ export default function App() {
   return (
     <div className="app">
       <header className="topbar">
-        <a className="brand" href="#/">
+        <a className="brand" href="#start">
           <span className="brand-logo">SAP</span>
           <span className="brand-name">Lernpfad</span>
         </a>
         <nav className="nav">
           {NAV.map((n) => (
-            <a key={n.path} href={`#/${n.path}`} className={activeNav === n.path ? "active" : ""}>
+            <a key={n.path} href={`#${n.path || "start"}`} className={activeNav === n.path ? "active" : ""}>
               <span className="nav-icon" aria-hidden="true">{n.icon}</span>
               <span className="nav-label">{n.label}</span>
             </a>

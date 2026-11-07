@@ -86,14 +86,16 @@ code, pre, kbd { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospac
 .row.center { justify-content: center; }
 
 /* ---------- Layout ---------- */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
 .app { min-height: 100vh; display: flex; flex-direction: column; }
-.main { flex: 1; width: 100%; max-width: 1120px; margin: 0 auto; padding: 24px 16px 48px; }
-.footer { text-align: center; font-size: 0.8rem; color: var(--muted); padding: 24px 16px; border-top: 1px solid var(--border); }
+.main { flex: 1; width: 100%; max-width: 1120px; margin: 0 auto; padding-block: 24px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.footer { text-align: center; font-size: 0.8rem; color: var(--muted); padding-block: 24px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); border-top: 1px solid var(--border); }
 
 .topbar {
-  position: sticky; top: 0; z-index: 10;
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
   display: flex; align-items: center; gap: 16px;
-  padding: 10px 16px;
+  padding-block: 10px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   box-shadow: var(--shadow);
@@ -205,6 +207,8 @@ code, pre, kbd { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospac
 .lvl-Fortgeschritten { background: var(--warn-soft); color: var(--warn); }
 .lvl-Profi { background: var(--bad-soft); color: var(--bad); }
 .reset-row { text-align: center; margin-top: 32px; }
+.confirm-box { display: inline-flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; padding: 12px 16px; border: 1px solid var(--bad); background: var(--bad-soft); border-radius: 12px; }
+.btn.danger { background: var(--bad); border-color: var(--bad); color: #fff; }
 
 .bar { height: 8px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
 .bar.small { height: 6px; }

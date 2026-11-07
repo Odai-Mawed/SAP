@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { MODULES } from "../data/modules.js";
 import { useProgress } from "../progress.jsx";
 import { lessonKey } from "../utils.js";
 
 export default function Home() {
   const { state, stats, reset } = useProgress();
+  const [confirming, setConfirming] = useState(false);
 
   // Nächste noch nicht abgeschlossene Lektion
   let nextLesson = null;
@@ -30,11 +32,11 @@ export default function Home() {
           </p>
           <div className="hero-actions">
             {nextLesson ? (
-              <a className="btn btn-lg" href={`#/lektion/${nextLesson.m.id}/${nextLesson.l.id}`}>
+              <a className="btn btn-lg" href={`#lektion--${nextLesson.m.id}--${nextLesson.l.id}`}>
                 {stats.doneLessons === 0 ? "Jetzt starten" : "Weiterlernen"}: {nextLesson.l.title} →
               </a>
             ) : (
-              <a className="btn btn-lg" href="#/pruefung">Alle Lektionen geschafft – zur Abschlussprüfung →</a>
+              <a className="btn btn-lg" href="#pruefung">Alle Lektionen geschafft – zur Abschlussprüfung →</a>
             )}
           </div>
           {stats.nextLevelXp && (
@@ -57,15 +59,15 @@ export default function Home() {
       </section>
 
       <section className="quick">
-        <a className="quick-card" href="#/tcodes">
+        <a className="quick-card" href="#tcodes">
           <span>⌨️</span>
           <div><strong>T-Code-Trainer</strong><small>Transaktionen im Befehlsfeld üben</small></div>
         </a>
-        <a className="quick-card" href="#/prozesse">
+        <a className="quick-card" href="#prozesse">
           <span>🔗</span>
           <div><strong>Prozess-Puzzle</strong><small>P2P, O2C & Co. in die richtige Reihenfolge</small></div>
         </a>
-        <a className="quick-card" href="#/glossar">
+        <a className="quick-card" href="#glossar">
           <span>📖</span>
           <div><strong>Glossar</strong><small>SAP-Begriffe nachschlagen</small></div>
         </a>
@@ -77,7 +79,7 @@ export default function Home() {
           const done = m.lessons.filter((l) => state.lessons[lessonKey(m.id, l.id)]?.done).length;
           const p = (done / m.lessons.length) * 100;
           return (
-            <a key={m.id} className="module-card" href={`#/modul/${m.id}`} style={{ "--accent": m.color }}>
+            <a key={m.id} className="module-card" href={`#modul--${m.id}`} style={{ "--accent": m.color }}>
               <div className="mc-top">
                 <span className="mc-icon">{m.icon}</span>
                 <span className={`level-tag lvl-${m.level}`}>{m.level}</span>
@@ -94,14 +96,17 @@ export default function Home() {
       </section>
 
       <div className="reset-row">
-        <button
-          className="btn ghost"
-          onClick={() => {
-            if (window.confirm("Gesamten Lernfortschritt wirklich zurücksetzen?")) reset();
-          }}
-        >
-          Fortschritt zurücksetzen
-        </button>
+        {confirming ? (
+          <div className="confirm-box">
+            <span>Gesamten Lernfortschritt wirklich löschen?</span>
+            <button className="btn danger" onClick={() => { reset(); setConfirming(false); }}>Ja, zurücksetzen</button>
+            <button className="btn ghost" onClick={() => setConfirming(false)}>Abbrechen</button>
+          </div>
+        ) : (
+          <button className="btn ghost" onClick={() => setConfirming(true)}>
+            Fortschritt zurücksetzen
+          </button>
+        )}
       </div>
     </>
   );
